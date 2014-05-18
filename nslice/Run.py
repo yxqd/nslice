@@ -1,6 +1,10 @@
 # -*- python -*-
 
 
+from numpy import pi
+deg2rad = pi/180
+
+
 class Run:
     
     def __init__(self, path):
@@ -13,14 +17,14 @@ class Run:
     
     def read_metadata(self):
         self.Ei = self.entry['NXSPE_info']['fixed_energy'][0]
-        self.psi = self.entry['NXSPE_info']['psi'][0]
+        self.psi = self.entry['NXSPE_info']['psi'][0] * deg2rad
         self.instrument = self.entry['instrument']['name'][0]
         return
 
     
     def read_pixE(self):
-        phi = self.entry['data']['azimuthal']
-        theta = self.entry['data']['polar']
+        phi = self.entry['data']['azimuthal'][:] * deg2rad
+        theta = self.entry['data']['polar'][:] * deg2rad
         # these are boundaries
         energy = self.entry['data']['energy']
         # convert to centers

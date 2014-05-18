@@ -43,7 +43,7 @@ def spe2hkle(Ei, Ef, theta, phi, mat):
     # each component has shape: npix, nEf
     kfx = np.cos(theta)[:, np.newaxis] * kf[np.newaxis, :]
     kfy = (np.sin(theta) * np.cos(phi))[:, np.newaxis] * kf[np.newaxis, :]
-    kfz = (np.sin(theta) * np.sin(phi))[:, np.newaxis] * kf[np.newaxis, :]
+    kfz = (-np.sin(theta) * np.sin(phi))[:, np.newaxis] * kf[np.newaxis, :]
     # kf vector
     kfx.shape = kfy.shape = kfz.shape = -1,
     kfv = np.vstack((kfx, kfy, kfz)).T
