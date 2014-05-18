@@ -25,17 +25,19 @@ def process(path):
     h.shape = k.shape = l.shape = E.shape = I.shape = error.shape = -1
     hklEIE = np.vstack((h,k,l,E,I,error))
     
-    from nslice.slice import slice_hE
-    H, edges = slice_hE(
+    from nslice.slice import slice
+    H, edges = slice(
         hklEIE, 
-        k=[0.95,1.05], l=[-1,1], 
-        h=(-3, 5.8, 0.02), E=(-5, 10, 0.1),
+        x = 'h', y = 'k', u='l', v='E',
+        E=[-1,1], l=[-1,1], 
+        h=(-5, 5, 0.02), k=(-5, 5, 0.02),
         )
     return H, edges
 
 
 H = None; edges = None
 for i in range(28880, 29000):
+# for i in range(28880, 28920):
     path = os.path.join(dir, "HYS_%d_4pixel.nxspe" % i)
     H1, edges1 = process(path)
     if H is None:
@@ -47,7 +49,7 @@ for i in range(28880, 29000):
 import histogram, histogram.hdf as hh
 axes = [
     histogram.axis('h', boundaries=edges[0]),
-    histogram.axis('E', unit='meV', boundaries=edges[1]),
+    histogram.axis('k', boundaries=edges[1]),
     ]
-h = histogram.histogram('I(h,E)', axes=axes, data=H)
-hh.dump(h, 'I_hE.h5')
+h = histogram.histogram('I(h,k)', axes=axes, data=H)
+hh.dump(h, 'I_hk.h5')

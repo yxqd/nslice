@@ -19,4 +19,3 @@ u,v = [1,0,0], [0,1,0]
 xtal_ori = XtalOrientation(ra,rb,rc, u,v, run.psi)
 
 hklE = run.compute_hklE(xtal_ori)
-hklE.tofile('hklE.nparr')

@@ -21,7 +21,6 @@ def process(path):
     xtal_ori = XtalOrientation(ra,rb,rc, u,v, run.psi)
 
     hklE = run.compute_hklE(xtal_ori)
-    hklE.tofile('%s-hklE.nparr' % basename)
     return
 
 
