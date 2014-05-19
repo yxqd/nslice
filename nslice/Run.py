@@ -10,8 +10,14 @@ class Run:
     def __init__(self, path):
         self.path = path
         from .nxspe import read
-        self.entry = read(path)
+        self.h5f, self.entry = read(path)
         self.read_metadata()
+        return
+
+
+    def __del__(self):
+        del self.entry
+        self.h5f.close()
         return
     
     
@@ -26,7 +32,7 @@ class Run:
         phi = self.entry['data']['azimuthal'][:] * deg2rad
         theta = self.entry['data']['polar'][:] * deg2rad
         # these are boundaries
-        energy = self.entry['data']['energy']
+        energy = self.entry['data']['energy'][:]
         # convert to centers
         energy = (energy[:-1] + energy[1:])/2
         return energy, theta, phi
