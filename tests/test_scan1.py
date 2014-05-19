@@ -20,9 +20,9 @@ print "computing projections..."
 scan.computeProjections(xtal_ori)
 print "computing slice..."
 h = scan.computeSlice(
-   x = 'k', y = 'E', u = 'h', v = 'l',
-   k=(-1,4,.03), E=(0,6,0.1), 
-   h=(0.95,1.05), l=(-1,1),
-   )
+    x = 'k', y = 'E', u = 'h', v = 'l',
+    k=(-1,4,.03), E=(0,6,0.1), 
+    h=(0.95,1.05), l=(-1,1),
+    )
 import histogram, histogram.hdf as hh
 hh.dump(h, 'I_kE.h5')
