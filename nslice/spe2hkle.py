@@ -7,22 +7,39 @@ import numpy as np
 def xtalori2mat(ra, rb, rc, u, v, psi):
     """create transformation matrices from orientation spec
     inputs: reciprocal laticce vectors, u/v vectors, and psi angle
+    
+    u/v vectors are vectors in the rotation plane of the crystal
+    represented in hkl notation.
+    
+    The main goal here is to compute three unit vectors
+    represented in hkl notation: x, y, z.
+    Here z is vertical, x along beam.
+    
+    u/v vectors are in the x-y plane.
+    if psi is 0, u should be x, and v should y.
     """
-    # rotate u, v by psi angle
-    from math import cos, sin
-    u1 = u * cos(psi) - v * sin(psi)
-    v1 = u * sin(psi) + v * cos(psi)
-    # ra, rb, rc are defined in a orthogonal 
-    # coordinate system attached to the crystal
+    # ra, rb, rc are defined in a cartesian
+    # coordinate system attached to the crystal (CCSC)
     r = np.array([ra, rb, rc])
-    # xyz are unit vectors of the laboratory coordinate system
-    # expressed in terms of the crystal coordinate system
-    x = np.dot(u1, r); lx=np.linalg.norm(x); x/=lx; u1/=lx
-    y = np.dot(v1, r); ly=np.linalg.norm(y); y/=ly; v1/=ly
-    z = np.cross(x,y) 
-    # now express z with ra, rb, rc
-    w = np.dot(np.linalg.inv(r.T), z)
-    return np.array([u1,v1,w])
+    # compute u, v in cartesian coordinate system
+    u_cart = np.dot(u, r)
+    v_cart = np.dot(v, r)
+    # normalize them
+    lu = np.linalg.norm(u_cart); u_cart/=lu
+    lv = np.linalg.norm(v_cart); v_cart/=lv
+    # rotate u, v by psi angle to obtain x,y unit vectors
+    from math import cos, sin
+    ex = u_cart * cos(psi) - v_cart * sin(psi)
+    ey = u_cart * sin(psi) + v_cart * cos(psi)
+    # now compute z unit vector in CCSC
+    ez = np.cross(ex,ey) 
+    # now express xyz with ra, rb, rc, to get hkl
+    # dot(r.T, hkl) = cartesian, therefore, dot(r.T**-1, cartesian) = hkl
+    invR = np.linalg.inv(r.T)
+    x1 = np.dot(invR, ex)
+    y1 = np.dot(invR, ey)
+    z1 = np.dot(invR, ez)
+    return np.array([x1, y1, z1])
 
 
 def spe2hkle(Ei, Ef, theta, phi, mat):
@@ -43,7 +60,7 @@ def spe2hkle(Ei, Ef, theta, phi, mat):
     # each component has shape: npix, nEf
     kfx = np.cos(theta)[:, np.newaxis] * kf[np.newaxis, :]
     kfy = (np.sin(theta) * np.cos(phi))[:, np.newaxis] * kf[np.newaxis, :]
-    kfz = (-np.sin(theta) * np.sin(phi))[:, np.newaxis] * kf[np.newaxis, :]
+    kfz = (np.sin(theta) * np.sin(phi))[:, np.newaxis] * kf[np.newaxis, :]
     # kf vector
     kfx.shape = kfy.shape = kfz.shape = -1,
     kfv = np.vstack((kfx, kfy, kfz)).T
