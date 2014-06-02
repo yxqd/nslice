@@ -25,4 +25,4 @@ h = scan.computeSlice(
     h=(0.95,1.05), l=(-1,1),
     )
 import histogram, histogram.hdf as hh
-hh.dump(h, 'I_kE.h5')
+hh.dump(h, 'scan1-I_kE.h5')
