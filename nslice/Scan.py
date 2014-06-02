@@ -68,7 +68,7 @@ class Scan:
         from .Run import Run
         xo = xtal_orientation
         for path in self.paths:
-            self.computeProjectionsForOneRun(path)
+            self.computeProjectionsForOneRun(path, xtal_orientation)
             continue
         return
     
@@ -104,5 +104,42 @@ class Scan:
             histogram.axis(kwds['y'], boundaries=edges[1]),
             ]
         return histogram.histogram('I(%(x)s,%(y)s)'%kwds, axes=axes, data=H/sa)
+
+    
+    def computeVolumeForOneRun(self, path, **kwds):
+        proj = self.readProjections(path)
+        from nslice.volume import volume
+        H, edges = volume(proj, **kwds)
+        
+        h,k,l,E, I, error = proj
+        shape = h.shape
+        solidangle_I = np.ones(shape, dtype='double')
+        solidangle_error = np.zeros(shape, dtype='double')
+        hklEIE = np.vstack((h,k,l,E,solidangle_I,solidangle_error))
+        sa, edges = volume(hklEIE, **kwds)
+        return edges, H, sa
+    
+    
+    def computeVolume(self, paths=None, **kwds):
+        H = None; sa = None; edges = None
+        for path in paths or self.paths:
+            print path
+            edges1, H1, sa1 = self.computeVolumeForOneRun(path, **kwds)
+            if H is None:
+                edges, H, sa = edges1, H1, sa1
+            else:
+                H += H1; sa += sa1
+            continue
+        
+        import histogram
+        axes = [
+            histogram.axis(kwds['x'], boundaries=edges[0]),
+            histogram.axis(kwds['y'], boundaries=edges[1]),
+            histogram.axis(kwds['z'], boundaries=edges[2]),
+            ]
+        return histogram.histogram(
+            'I(%(x)s,%(y)s,%(z)s)'%kwds, 
+            axes=axes, data=H/sa,
+            )
 
     
