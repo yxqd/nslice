@@ -2,7 +2,7 @@
 
 import os, numpy as np
 
-dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp")
+dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp/spe")
 
 def process(path):
     basename, ext = os.path.splitext(os.path.basename(path))

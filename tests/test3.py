@@ -2,7 +2,7 @@
 
 import os
 
-dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp")
+dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp/spe")
 
 def process(path):
     basename = os.path.basename(path)

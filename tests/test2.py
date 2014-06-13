@@ -2,7 +2,7 @@
 
 import os
 
-dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp")
+dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp/spe")
 path = os.path.join(dir, "HYS_28880_4pixel.nxspe")
 
 from nslice.Run import Run

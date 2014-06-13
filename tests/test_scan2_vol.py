@@ -2,7 +2,7 @@
 
 import os, numpy as np
 
-dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp")
+dir = os.path.expanduser("~/simulations/HYSPEC/kvo/exp/spe")
 filename_template = "HYS_%d_4pixel.nxspe"
 run_numbers = range(28880, 29084)
 from nslice.Scan import Scan
