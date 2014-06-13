@@ -1,6 +1,7 @@
 # -*- python -*-
 
 
+import os
 from numpy import pi
 deg2rad = pi/180
 
@@ -9,6 +10,8 @@ from .AbstractRun import AbstractRun as base
 class Run(base):
     
     def __init__(self, path):
+        if not os.path.exists(path):
+            raise IOError("%s does not exist" % path)
         self.path = path
         from .nxspe import read
         self.h5f, self.entry = read(path)
@@ -17,8 +20,9 @@ class Run(base):
 
 
     def __del__(self):
-        del self.entry
-        self.h5f.close()
+        if hasattr(self, 'entry'):
+            del self.entry
+            self.h5f.close()
         return
     
     
