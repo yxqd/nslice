@@ -13,6 +13,8 @@ def Run(path):
 
 
 from .NXSpeRun import Run as NXSpeRun
+from .H5Run import Run as H5Run
 factories = {
     '.nxspe': NXSpeRun,
+    '.h5': H5Run,
     }
