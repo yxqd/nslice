@@ -20,6 +20,7 @@ def slice(hklEIE, x=None, y=None, u=None, v=None,
     
     h, k, l, E, I, error = hklEIE
     data = hklEIE[:, (eval(u)>umin)*(eval(u)<umax)*(eval(v)>vmin)*(eval(v)<vmax)]
+    h,k,l,E,I,error = data
     
     I[I!=I] = 0 # remove nans in intensity
     I[I<0] = 0
