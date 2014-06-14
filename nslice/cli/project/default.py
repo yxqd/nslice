@@ -63,6 +63,6 @@ def parse_cmdline():
         parser.error("too many arguments\n\n")
         
     kwds = vars(options)
-    return args[1:], kwds
+    return [], kwds
 
 
