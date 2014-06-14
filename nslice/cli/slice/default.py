@@ -80,9 +80,9 @@ def parse_cmdline():
     parser.add_option('-v', '--v', type="str", default="E", dest='v')
     
     parser.add_option('', '--h', type="tuple", default="", dest='h')
-    parser.add_option('-k', '--k', type="tuple", default="", dest='k')
-    parser.add_option('-l', '--l', type="tuple", default="", dest='l')
-    parser.add_option('-E', '--E', type="tuple", default="", dest='E')
+    parser.add_option('', '--k', type="tuple", default="", dest='k')
+    parser.add_option('', '--l', type="tuple", default="", dest='l')
+    parser.add_option('', '--E', type="tuple", default="", dest='E')
     
     #
     options, args = parser.parse_args()
