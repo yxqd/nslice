@@ -6,7 +6,6 @@ from .. import name as cliname
 from . import name as cmdname
 actionname = ''
 
-import os
 def run(scan=None, poolsize=None, output=None, **slice_opts):
     scan = load_mod(scan)['scan']
     
@@ -51,7 +50,6 @@ def run(scan=None, poolsize=None, output=None, **slice_opts):
     return
 
 
-import numpy as np
 def one(f, H, sa, scan, slice_opts):
     H = np.frombuffer(H.get_obj())
     sa = np.frombuffer(sa.get_obj())
@@ -59,19 +57,6 @@ def one(f, H, sa, scan, slice_opts):
     H.shape = sa.shape = H1.shape
     H += H1; sa += sa1
     return
-
-
-def mparr2nparr(a):
-    return np.frombuffer(a.get_obj())
-
-
-def load_mod(f):
-    if not os.path.exists(f):
-        raise IOError("%s does not exist" % f)
-    code = open(f).read()
-    context = dict()
-    exec code in context
-    return context
 
 
 def parse_cmdline():
@@ -108,18 +93,6 @@ def parse_cmdline():
     return [], kwds
 
 
-import copy
-import optparse
-def check_tuple(option, opt, value):
-    if not value:
-        return
-    try:
-        v = eval(value)
-        return tuple(v)
-    except ValueError:
-        raise optparse.OptionValueError(
-            "option %s: invalid value: %r" % (opt, value))
-class MyOption(optparse.Option):
-    TYPES = optparse.Option.TYPES + ('tuple', )
-    TYPE_CHECKER = copy.copy(optparse.Option.TYPE_CHECKER)
-    TYPE_CHECKER['tuple'] = check_tuple
+import numpy as np
+from .._utils import mparr2nparr, load_mod, MyOption
+
