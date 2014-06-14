@@ -8,6 +8,9 @@ def xtalori2mat(ra, rb, rc, u, v, psi):
     """create transformation matrices from orientation spec
     inputs: reciprocal laticce vectors, u/v vectors, and psi angle
     
+    ra, rb, rc are reciprocal base vectors represented in a cartesian
+    coordinate system attached to the crystal.
+    
     u/v vectors are vectors in the rotation plane of the crystal
     represented in hkl notation.
     
@@ -16,7 +19,7 @@ def xtalori2mat(ra, rb, rc, u, v, psi):
     Here z is vertical, x along beam.
     
     u/v vectors are in the x-y plane.
-    if psi is 0, u should be x, and v should y.
+    if psi is 0, u should be x, and v must be in x-y plane.
     """
     # ra, rb, rc are defined in a cartesian
     # coordinate system attached to the crystal (CCSC)
@@ -27,12 +30,16 @@ def xtalori2mat(ra, rb, rc, u, v, psi):
     # normalize them
     lu = np.linalg.norm(u_cart); u_cart/=lu
     lv = np.linalg.norm(v_cart); v_cart/=lv
+    # u and v is not necesarily perpendicular to each other
+    # let us compute z first
+    ez = np.cross(u_cart, v_cart); ez/=np.linalg.norm(ez)
+    # now we can compute vprime, a unit vector perpedicular to
+    # u_cart and ez
+    vprime_cart = np.cross(ez, u_cart)
     # rotate u, v by psi angle to obtain x,y unit vectors
     from math import cos, sin
-    ex = u_cart * cos(psi) - v_cart * sin(psi)
-    ey = u_cart * sin(psi) + v_cart * cos(psi)
-    # now compute z unit vector in CCSC
-    ez = np.cross(ex,ey) 
+    ex = u_cart * cos(psi) - vprime_cart * sin(psi)
+    ey = u_cart * sin(psi) + vprime_cart * cos(psi)
     # now express xyz with ra, rb, rc, to get hkl
     # dot(r.T, hkl) = cartesian, therefore, dot(r.T**-1, cartesian) = hkl
     invR = np.linalg.inv(r.T)
