@@ -14,13 +14,24 @@ def slice(hklEIE, x=None, y=None, u=None, v=None,
     """
     xmin, xmax, dx = eval(x)
     ymin, ymax, dy = eval(y)
-
-    umin, umax = eval(u)
-    vmin, vmax = eval(v)
+    
+    urange = eval(u)
+    if urange is None: urange = None, None
+    umin, umax = urange
+    
+    vrange = eval(v)
+    if vrange is None: vrange = None, None
+    vmin, vmax = vrange
     
     h, k, l, E, I, error = hklEIE
-    data = hklEIE[:, (eval(u)>umin)*(eval(u)<umax)*(eval(v)>vmin)*(eval(v)<vmax)]
-    h,k,l,E,I,error = data
+    limits = True
+    if umin is not None: limits *= eval(u) > umin
+    if umax is not None: limits *= eval(u) < umax
+    if vmin is not None: limits *= eval(v) > vmin
+    if vmax is not None: limits *= eval(v) < vmax
+    if type(limits) is np.ndarray:
+        data = hklEIE[:, limits]
+        h,k,l,E,I,error = data
     
     I[I!=I] = 0 # remove nans in intensity
     I[I<0] = 0
