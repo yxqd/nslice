@@ -83,7 +83,7 @@ def parse_cmdline():
     usage += "\n * Example:\n"
     usage += "   $ " + cmd1 + ""
     
-    parser = optparse.OptionParser(usage, add_help_option=False, option_class=MyOption)
+    parser = optparse.OptionParser(usage, add_help_option=True, option_class=MyOption)
     
     parser.add_option('-s', '--scan', type="str", default="scan", dest='scan')
     parser.add_option('-n', '--poolsize', type="int", default=10, dest='poolsize')
@@ -94,7 +94,7 @@ def parse_cmdline():
     parser.add_option('-u', '--u', type="str", default="l", dest='u')
     parser.add_option('-v', '--v', type="str", default="E", dest='v')
     
-    parser.add_option('-h', '--h', type="tuple", default="", dest='h')
+    parser.add_option('', '--h', type="tuple", default="", dest='h')
     parser.add_option('-k', '--k', type="tuple", default="", dest='k')
     parser.add_option('-l', '--l', type="tuple", default="", dest='l')
     parser.add_option('-E', '--E', type="tuple", default="", dest='E')

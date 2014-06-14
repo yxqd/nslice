@@ -24,9 +24,11 @@ def parse_cmdline():
         action = 'default'
     else:
         action = sys.argv[2]
-
+    
     if action in ['-h', '--help']:
         action = 'help'
+    elif action.startswith('-'): # default action can be escaped
+        action = 'default'
 
     if action not in actions:
         print ()
