@@ -136,6 +136,7 @@ class Scan:
 
     
     def computeVolumeForOneRun(self, path, **kwds):
+        kwds = self._setBounds(kwds)
         proj = self.readProjections(path)
         from nslice.volume import volume
         H, edges = volume(proj, **kwds)
@@ -170,5 +171,28 @@ class Scan:
             'I(%(x)s,%(y)s,%(z)s)'%kwds, 
             axes=axes, data=H/sa,
             )
-
     
+    
+    def volumeOutputDims(self, **kwds):
+        kwds = self._setBounds(kwds)
+        from .volume import volume_output_dims
+        return volume_output_dims(None, **kwds)
+    
+
+    def _setBounds(self, opts):
+        opts = dict(opts)
+        bounds = self.getProjectionBounds()
+        hmin, hmax, kmin, kmax, lmin, lmax, Emin, Emax = bounds
+        for axis in 'hklE':
+            if opts[axis] is not None:
+                self._setAxisBounds(axis, opts, locals())
+            continue
+        return opts
+    
+    
+    def _setAxisBounds(self, axisname, opts, context):
+        min, max, step = opts[axisname]
+        if min is None: min = context['%smin'%axisname]
+        if max is None: max = context['%smax'%axisname]
+        opts[axisname] = min, max, step
+        return

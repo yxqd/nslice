@@ -17,8 +17,7 @@ def run(scan=None, poolsize=None, output=None, **volume_opts):
             continue
         return
 
-    from nslice.volume import volume_output_dims
-    shape, edges = volume_output_dims(None, **volume_opts)
+    shape, edges = scan.volumeOutputDims(**volume_opts)
     size = shape[0] * shape[1] * shape[2]
     
     from multiprocessing import Process, Queue, Array
@@ -81,10 +80,10 @@ def parse_cmdline():
     parser.add_option('-z', '--z', type="str", default="E", dest='z')
     parser.add_option('-u', '--u', type="str", default="l", dest='u')
     
-    parser.add_option('', '--h', type="tuple", default="", dest='h')
-    parser.add_option('', '--k', type="tuple", default="", dest='k')
-    parser.add_option('', '--l', type="tuple", default="", dest='l')
-    parser.add_option('', '--E', type="tuple", default="", dest='E')
+    parser.add_option('', '--h', type="axis", default="", dest='h')
+    parser.add_option('', '--k', type="axis", default="", dest='k')
+    parser.add_option('', '--l', type="axis", default="", dest='l')
+    parser.add_option('', '--E', type="axis", default="", dest='E')
     
     #
     options, args = parser.parse_args()
