@@ -1,0 +1,8 @@
+import os, numpy as np
+
+dir = os.path.expanduser("spe")
+filename_template = "HYS_%d_4pixel.nxspe"
+run_numbers = range(28880, 29084)
+from nslice.Scan import Scan
+scan = Scan(dir, filename_template, run_numbers)
+
