@@ -53,8 +53,8 @@ def parse_cmdline():
     
     parser = optparse.OptionParser(usage, add_help_option=True)
     
-    parser.add_option('-x', '--xtal-ori', type="str", default="xtal_ori", dest='xtal_ori')
-    parser.add_option('-s', '--scan', type="str", default="scan", dest='scan')
+    parser.add_option('-x', '--xtal-ori', type="str", default="i.xtal_ori", dest='xtal_ori')
+    parser.add_option('-s', '--scan', type="str", default="i.scan", dest='scan')
     parser.add_option('-n', '--poolsize', type="int", default=10, dest='poolsize')
     
     #

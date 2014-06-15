@@ -69,7 +69,7 @@ def parse_cmdline():
     
     parser = optparse.OptionParser(usage, add_help_option=True, option_class=MyOption)
     
-    parser.add_option('-s', '--scan', type="str", default="scan", dest='scan')
+    parser.add_option('-s', '--scan', type="str", default="i.scan", dest='scan')
     parser.add_option('-n', '--poolsize', type="int", default=10, dest='poolsize')
     parser.add_option('-o', '--output', type="str", default="out.h5", dest='output')
 
