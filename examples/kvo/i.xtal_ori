@@ -1,0 +1,18 @@
+from nslice.XtalOrientation import XtalOrientation
+a = b = 8.87;  c = 5.2
+from math import pi
+twopi = 2*pi
+
+# There should be a cartesian coordinate system attached to the crystal
+# ra, rb, rc are reciprocal lattice vectors defined in that cartesian
+# coordinate system.
+ra,rb,rc = [twopi/a, 0,0], [0,twopi/b,0], [0,0,twopi/c]
+
+# u is the hkl representation of "x" axis (beam direction)
+# when psi is 0. 
+# v is the hkl representation of any direction in the horizental plane
+# other than "x". uXv must be vertical up, however.
+u,v = [1,0,0], [0,1,0]
+
+# construct xtal orientation
+xtal_ori = XtalOrientation(ra,rb,rc, u,v, 0)

@@ -1,6 +1,6 @@
 Files:
-  scan: describe scan
-  xtal_ori: describe crystal orientation
+  i.scan: describe scan
+  i.xtal_ori: describe crystal orientation
 
 Add nslice support:
  $ . ~linjiao/.dev-nslice

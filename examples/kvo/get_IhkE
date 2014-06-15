@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 nslice volume \
+    -o IhkE.h5 \
     -n 10 \
     --x=h --y=k --z=E  --u=l \
     --k=-4:4:.05  --E=-5:10:0.2 \
