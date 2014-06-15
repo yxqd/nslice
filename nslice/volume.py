@@ -15,7 +15,7 @@ def volume(hklEIE, x=None, y=None, z=None, u=None,
     xmin, xmax, dx = eval(x)
     ymin, ymax, dy = eval(y)
     zmin, zmax, dz = eval(z)
-
+    
     urange = eval(u)
     if urange is None: urange = None, None
     umin, umax = urange
@@ -50,28 +50,6 @@ def volume_output_dims(
     h=None, k=None, l=None, E=None):
     """
     volume_output_dims(hklEIE,
-        x='h', y='k', z='E', u='l',
-        k=(-4,4, 0.08), l=[-1,1],
-        h=(-3, 6, 0.1), E=(-5, 10, 0.2),
-        )
-    """
-    xmin, xmax, dx = eval(x)
-    ymin, ymax, dy = eval(y)
-    zmin, zmax, dz = eval(z)
-
-    edges = [
-        np.arange(xmin, xmax+dx/2, dx),
-        np.arange(ymin, ymax+dy/2, dy),
-        np.arange(zmin, zmax+dz/2, dz),
-        ]
-    return (edges[0].size-1, edges[1].size-1, edges[2].size-1), edges
-
-
-def volume_output_dims(
-    hklEIE, x=None, y=None, z=None, u=None,
-    h=None, k=None, l=None, E=None):
-    """
-    volume_output_dims(hklEIE,
         x='h', y='E', z='k', v='l',
         k=[-3,4,0.03], l=[-1,1],
         h=(-3, 5.8, 0.02), E=(-5, 10, 0.1),
@@ -80,7 +58,7 @@ def volume_output_dims(
     xmin, xmax, dx = eval(x)
     ymin, ymax, dy = eval(y)
     zmin, zmax, dz = eval(z)
-
+    
     bins = [
         np.arange(xmin, xmax+dx/2, dx),
         np.arange(ymin, ymax+dy/2, dy),
