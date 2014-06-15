@@ -103,6 +103,7 @@ class Scan:
     
     
     def computeSliceForOneRun(self, path, **kwds):
+        kwds = self._setBounds(kwds)
         proj = self.readProjections(path)
         from nslice.slice import slice
         H, edges = slice(proj, **kwds)
@@ -134,6 +135,12 @@ class Scan:
             ]
         return histogram.histogram('I(%(x)s,%(y)s)'%kwds, axes=axes, data=H/sa)
 
+    
+    def sliceOutputDims(self, **kwds):
+        kwds = self._setBounds(kwds)
+        from .slice import slice_output_dims
+        return slice_output_dims(None, **kwds)
+    
     
     def computeVolumeForOneRun(self, path, **kwds):
         kwds = self._setBounds(kwds)
@@ -191,8 +198,12 @@ class Scan:
     
     
     def _setAxisBounds(self, axisname, opts, context):
-        min, max, step = opts[axisname]
+        tokens = opts[axisname]
+        if len(tokens) == 3:
+            min, max, step = tokens
+        elif len(tokens) == 2:
+            min, max = tokens
         if min is None: min = context['%smin'%axisname]
         if max is None: max = context['%smax'%axisname]
-        opts[axisname] = min, max, step
+        opts[axisname] = [min, max] + tokens[2:]
         return

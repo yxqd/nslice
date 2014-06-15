@@ -16,9 +16,8 @@ def run(scan=None, poolsize=None, output=None, **slice_opts):
             one(f, H, sa, scan, slice_opts)
             continue
         return
-
-    from nslice.slice import slice_output_dims
-    shape, edges = slice_output_dims(None, **slice_opts)
+    
+    shape, edges = scan.sliceOutputDims(**slice_opts)
     size = shape[0] * shape[1]
     
     from multiprocessing import Process, Queue, Array
@@ -79,10 +78,10 @@ def parse_cmdline():
     parser.add_option('-u', '--u', type="str", default="l", dest='u')
     parser.add_option('-v', '--v', type="str", default="E", dest='v')
     
-    parser.add_option('', '--h', type="tuple", default="", dest='h')
-    parser.add_option('', '--k', type="tuple", default="", dest='k')
-    parser.add_option('', '--l', type="tuple", default="", dest='l')
-    parser.add_option('', '--E', type="tuple", default="", dest='E')
+    parser.add_option('', '--h', type="axis", default="", dest='h')
+    parser.add_option('', '--k', type="axis", default="", dest='k')
+    parser.add_option('', '--l', type="axis", default="", dest='l')
+    parser.add_option('', '--E', type="axis", default="", dest='E')
     
     #
     options, args = parser.parse_args()

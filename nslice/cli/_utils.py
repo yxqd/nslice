@@ -31,16 +31,12 @@ def check_axis(option, opt, value):
     if not value:
         return
     try:
-        tokens = value.split(',')
-        if len(tokens) == 3:
-            min, max, step = eval(value)
-        elif len(tokens) == 1:
-            step = eval(value)
-            min, max = None, None
-        else:
+        tokens = value.split(':')
+        if len(tokens) not in [2, 3]:
             raise optparse.OptionValueError(
-                "option %s: invalid value: %r" % (opt, value))
-        return min, max, step
+                "option %s: invalid value: %r. Format: min:max:step or min:max" % (opt, value))
+        tokens = [eval(t)  if t else None for t in tokens]
+        return tokens
     except ValueError:
         raise optparse.OptionValueError(
             "option %s: invalid value: %r" % (opt, value))
