@@ -1,4 +1,5 @@
-# -*- python -*-
+# -*- Python -*-
+# Jiao Lin <linjiao@caltech.edu>
 
 
 import os, numpy as np
@@ -30,7 +31,7 @@ class Scan:
     def workdir(self): return 'work-%s' % self.name
     
     
-    projection_filename_template = 'proj-%s.npyarr'
+    projection_filename_template = 'proj-%s.h5'
     def get_projection_filename(self, nxspepath):
         basename,ext = os.path.splitext(os.path.basename(nxspepath))
         return self.projection_filename_template % basename
@@ -39,11 +40,33 @@ class Scan:
         return os.path.join(self.workdir(), fn)
     
     
+    def getProjectionBounds(self, paths=None):
+        paths = paths or self.paths
+        N = len(paths)
+        t = np.zeros((N,8), dtype=np.double)
+        for i,path in enumerate(paths):
+            t[i] = self.getProjectionBoundsForOneRun(path)
+            continue
+        return np.min(t[:,0]), np.max(t[:,1]), \
+            np.min(t[:,2]), np.max(t[:,3]), \
+            np.min(t[:,4]), np.max(t[:,5]), \
+            np.min(t[:,6]), np.max(t[:,7])
+    
+    
+    def getProjectionBoundsForOneRun(self, nxspepath):
+        """get the upper and lower bounds of h,k,l,E for a projection file
+        """
+        f = self.get_projection_filepath(nxspepath)
+        from .Projection import ProjectionFile
+        pf = ProjectionFile(f)
+        return pf.readBounds()
+    
+    
     def readProjections(self, nxspepath):
         f = self.get_projection_filepath(nxspepath)
-        arr = np.fromfile(f)
-        arr.shape = 6,-1
-        return arr
+        from .Projection import ProjectionFile
+        pf = ProjectionFile(f)
+        return pf.readData()
     
     
     def computeProjectionsForOneRun(self, path, xtal_orientation):
@@ -60,7 +83,13 @@ class Scan:
         I, error = run.read_data()
         h.shape = k.shape = l.shape = E.shape = I.shape = error.shape = -1
         hklEIE = np.vstack((h,k,l,E,I,error))
-        hklEIE.tofile(ofile)
+        from .Projection import Projection, ProjectionFile
+        proj = Projection(); proj.data = hklEIE
+        bounds = np.nanmin(h), np.nanmax(h), np.nanmin(k), np.nanmax(k),\
+            np.nanmin(l), np.nanmax(l), np.nanmin(E), np.nanmax(E)
+        proj.bounds = np.array(bounds)
+        pf = ProjectionFile(ofile)
+        pf.write(proj)
         return
     
     
