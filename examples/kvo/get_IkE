@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+nslice slice \
+    -n 10 \
+    --x=k --y=E --u=h  --v=l \
+    --k=-1:4:.03  --E=0:6:0.1 \
+    --h=0.95:1.05  --l=-1:1 

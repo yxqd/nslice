@@ -1,0 +1,11 @@
+Files:
+  scan: describe scan
+  xtal_ori: describe crystal orientation
+
+Add nslice support:
+ $ . ~linjiao/.dev-nslice
+
+Make projection:
+ $ nslice project
+
+Make slice: see examples in get_IkE
