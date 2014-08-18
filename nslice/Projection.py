@@ -21,17 +21,22 @@ class ProjectionFile:
         f = h5py.File(self.path, 'a')
         f['data'] = proj.data
         f['bounds'] = proj.bounds
+        f.close()
         return 
     
     
     def readData(self):
         f = h5py.File(self.path, 'r')
-        return f['data'][:]
+        d = f['data'][:]
+        f.close()
+        return d
 
     
     def readBounds(self):
         f = h5py.File(self.path, 'r')
-        return f['bounds'][:]
+        d = f['bounds'][:]
+        f.close()
+        return d
         
     
     
