@@ -41,6 +41,7 @@ def volume(hklEIE, x=None, y=None, z=None, u=None,
         np.arange(zmin, zmax+dz/2, dz),
         ]
     weights = I
+    if not sample.size: sample = [[xmin],[ymin],[zmin]]; weights = [0]
     H, edges = np.histogramdd(sample, bins=bins, weights=weights)
     return H, edges
 
