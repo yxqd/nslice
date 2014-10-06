@@ -82,6 +82,11 @@ def parse_cmdline():
     parser.add_option('', '--k', type="axis", default="", dest='k')
     parser.add_option('', '--l', type="axis", default="", dest='l')
     parser.add_option('', '--E', type="axis", default="", dest='E')
+
+    parser.add_option('', '--xaxis', type="axis", default="", dest='xaxis')
+    parser.add_option('', '--yaxis', type="axis", default="", dest='yaxis')
+    parser.add_option('', '--uaxis', type="axis", default="", dest='uaxis')
+    parser.add_option('', '--vaxis', type="axis", default="", dest='vaxis')
     
     #
     options, args = parser.parse_args()
