@@ -95,10 +95,7 @@ def getData(x,y,u,v, h,k,l,E):
         v = c2v.get(axis)
         if v: return v
         if isinstance(axis, basestring):
-            if len(axis)==3: 
-                return map(float, axis)
-            axis = axis.split(',')
-            return map(float, axis)
+            return hkl_notation2vector(axis)
         return map(float, axis)
     # qaxes will be sth like [('x', [1,0,0]), ...]
     qaxes = [ (name, tovector(axis)) for name, axis in qaxes]
@@ -111,6 +108,13 @@ def getData(x,y,u,v, h,k,l,E):
     name2arr[qaxes[1][0]] = y1
     name2arr[qaxes[2][0]] = z1
     return name2arr['x'], name2arr['y'], name2arr['u'], name2arr['v']
+
+
+def hkl_notation2vector(s):
+    if len(s)==3: 
+        return map(float, s)
+    s = s.split(',')
+    return map(float, s)
 
 
 def slice_output_dims(
