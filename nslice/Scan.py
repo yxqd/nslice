@@ -190,8 +190,10 @@ class Scan:
         opts = dict(opts)
         bounds = self.getProjectionBounds()
         hmin, hmax, kmin, kmax, lmin, lmax, Emin, Emax = bounds
-        for axis in 'hklE':
-            if opts[axis] is not None:
+        axes = list('hklE')
+        axes += [c+'axis' for c in 'xyzuv']
+        for axis in axes:
+            if opts.get(axis) is not None:
                 self._setAxisBounds(axis, opts, locals())
             continue
         return opts
@@ -203,7 +205,35 @@ class Scan:
             min, max, step = tokens
         elif len(tokens) == 2:
             min, max = tokens
-        if min is None: min = context['%smin'%axisname]
-        if max is None: max = context['%smax'%axisname]
+        if axisname in 'hklE':
+            if min is None: min = context['%smin'%axisname]
+            if max is None: max = context['%smax'%axisname]
+        else:
+            assert axisname.endswith('axis')
+            c = axisname[0]
+            if c != 'E':
+                # hack. compute the max sqrt(h^2+k^2+l^2)
+                # and divide it by length of the axis direction
+                # vector
+                # 1. compute max "length"
+                ct = context
+                max_len = np.linalg.norm(
+                    np.max(
+                        np.abs([[ct['hmin'], ct['kmin'], ct['lmin']],
+                               [ct['hmax'], ct['kmax'], ct['lmax']]]),
+                        axis=0
+                        )
+                    )
+                axis_vec = opts[c]
+                from .slice import hkl_notation2vector as hkl_n2v
+                axis_vec = hkl_n2v(axis_vec)
+                axis_len = np.linalg.norm(axis_vec)
+                L = max_len / axis_len
+                if min is None: min = -L
+                if max is None: max = L
+            else:
+                if min is None: min = context['Emin']
+                if max is None: max = context['Emax']
+                
         opts[axisname] = [min, max] + tokens[2:]
         return
