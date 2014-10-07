@@ -115,7 +115,9 @@ def getData(x,y,u,v, h,k,l,E):
 
 def slice_output_dims(
     hklEIE, x=None, y=None, u=None, v=None,
-    h=None, k=None, l=None, E=None):
+    h=None, k=None, l=None, E=None,
+    xaxis=None, yaxis=None, uaxis=None, vaxis=None,
+    ):
     """
     slice_output_dims(hklEIE,
         x='h', y='E', u='k', v='l',
@@ -123,9 +125,15 @@ def slice_output_dims(
         h=(-3, 5.8, 0.02), E=(-5, 10, 0.1),
         )
     """
-    xmin, xmax, dx = eval(x)
-    ymin, ymax, dy = eval(y)
-
+    if x in 'hklE' and x in locals():
+        xmin, xmax, dx = eval(x)
+    else:
+        xmin, xmax, dx = xaxis
+    if y in 'hklE' and y in locals():
+        ymin, ymax, dy = eval(y)
+    else:
+        ymin, ymax, dy = yaxis
+        
     bins = [
         np.arange(xmin, xmax+dx/2, dx),
         np.arange(ymin, ymax+dy/2, dy),
