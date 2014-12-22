@@ -73,6 +73,7 @@ def slice(
         np.arange(ymin, ymax+dy/2, dy),
         ]
     weights = I
+    if not sample.size: sample = [[xmin],[ymin]]; weights = [0]
     H, edges = np.histogramdd(sample, bins=bins, weights=weights)
     return H, edges
 

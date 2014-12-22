@@ -7,6 +7,7 @@ load_scan = lambda f: load_mod(f)['scan']
 
 
 def load_mod(f):
+    import os
     if not os.path.exists(f):
         raise IOError("%s does not exist" % f)
     code = open(f).read()
