@@ -6,7 +6,7 @@ at direct-geometry Time-of-flight instruments.
 
 Depends on:
 
+* docopt
 * numpy
 * h5py
 * histogram
-
