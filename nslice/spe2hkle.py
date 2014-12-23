@@ -13,7 +13,7 @@ def spe2hkle(Ei, Ef, theta, phi, mat):
     mat: matrice (can be obtained from xtalori2mat
     x along beam, z vertical
     """
-    from .neutron import V2K, SE2V
+    from .neutron.conversion import V2K, SE2V
     se2k = SE2V * V2K
     kf = np.sqrt(Ef) * se2k   # array of nEf
     # dims
