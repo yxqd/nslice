@@ -16,16 +16,20 @@ Inputs:
   i.xtal_ori
   i.hklE
 
+See tests/bin/sxr for an example
+
 Commands:
 * kernelQ: compute Q vector for the kernel xml
 * alignment: compute alignment angles for the sampleassembly xmls
 * psi: compute the psi angle to be used in simulation (rotation of the whole sample assembly)
+* mk-sa: make sample assembly template
 
 Usage:
   sxr -h | --help
   sxr kernelQ
   sxr alignment
   sxr psi  --Ei=<Ei> [--angles=<angleaxis>]
+  sxr mk-sa  --out=<output-dir>
 """
 
 def main():
@@ -38,6 +42,8 @@ def main():
         alignment()
     elif args['psi']:
         psi(args['--Ei'], args['--angles'])
+    elif args['mk-sa']:
+        mksa(args['--out'])
     return
 
 
@@ -57,8 +63,8 @@ def kernelQ():
     Qx, Qy, Qz = np.dot(hkl, t)
     # convert to MC convention
     Q = Qy, Qz, Qx
-    print Q
-    return
+    print "Q:", Q
+    return Q
 
 
 def alignment():
@@ -93,8 +99,8 @@ def alignment():
     # can convert it into alighment angles
     from nslice.mc.rotateVector import toAngles
     angles = toAngles(m)
-    print angles
-    return
+    print "Angles for crystal alignment in sampleassembly.xml:",angles
+    return angles
 
 
 def psi(Ei, angleaxis):
@@ -115,10 +121,86 @@ def psi(Ei, angleaxis):
     from nslice.xtalori import Eresidual
     psi, eres = Eresidual(xo, hkl, Etarget, angles, Ei).T
     good = np.abs(eres) < Ei/10.
+    print "psi vs Energy residual"
     print np.vstack((psi[good], eres[good])).T
     return
 
 
-import nslice, numpy as np
+def mksa(outdir):
+    os.makedirs(outdir)
+    # sampleassembly.xml
+    angles = tuple(alignment())
+    text = saxml % locals()
+    open(os.path.join(outdir, 'sampleassembly.xml'), 'wt').write(text)
+    # X-scatterer.xml
+    hkl, E = load_hklE()
+    dE = E/100.
+    Q = kernelQ()
+    text = scxml % locals()
+    open(os.path.join(outdir, 'X-scatterer.xml'), 'wt').write(text)
+    # X.xyz
+    # from nslice.io import load_xtal_ori
+    # xo = load_xtal_ori("i.xtal_ori")
+    text = Xxyz
+    open(os.path.join(outdir, 'X.xyz'), 'wt').write(text)
+    print
+    print "* Done creating sampleassembly template in %r" % outdir
+    return
+
+
+saxml = """<?xml version="1.0"?>
+
+<!DOCTYPE SampleAssembly>
+
+<SampleAssembly name="X"
+   max_multiplescattering_loops_among_scatterers="1"
+   max_multiplescattering_loops_interactM_path1="4"
+   min_neutron_probability=".1"
+ >
+
+  <PowderSample name="X" type="sample">
+    <Shape>
+      <block width="5.*cm" height="5.*cm" thickness="1.*cm"/>
+    </Shape>
+    <Phase type="crystal">
+      <ChemicalFormula>X</ChemicalFormula>
+      <xyzfile>X.xyz</xyzfile>
+    </Phase>
+  </PowderSample>
+
+  <LocalGeometer registry-coordinate-system="InstrumentScientist">
+    <Register name="X" position="(0,0,0)" orientation="%(angles)s"/>
+  </LocalGeometer>
+
+  <Environment temperature="300*K"/>
+
+</SampleAssembly>
+"""
+
+scxml = """<?xml version="1.0"?>
+
+<!DOCTYPE scatterer>
+
+<!-- mcweights: monte-carlo weights for 3 possible processes:
+     absorption, scattering, transmission -->
+<homogeneous_scatterer 
+  mcweights="0, 1, 0"
+  max_multiplescattering_loops="4"
+  >
+  
+  <!-- Q was computed from "sxr kernelQ"
+    -->
+  <ConstantvQEKernel momentum-transfer="%(Q)s" energy-transfer="%(E)s*meV" dE="%(dE)s*meV"/>
+      
+</homogeneous_scatterer>
+"""
+
+Xxyz = """<<# of atoms>>
+<<basis vectors>>
+<<list of atom symbols and positions>>
+"""
+
+
+import nslice, numpy as np, os
 
 if __name__ == '__main__': main()
