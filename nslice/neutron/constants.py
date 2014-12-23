@@ -1,5 +1,5 @@
-# -*- python -*-
-
+# -*- Python -*-
+# Jiao Lin <linjiao@caltech.edu>
 
 from math import sqrt
 
@@ -14,3 +14,6 @@ boltzman_constant = 1.3806504e-23;
 kB = boltzman_constant;
 
 hbar = 1.054571628e-34;
+
+
+# End of file 

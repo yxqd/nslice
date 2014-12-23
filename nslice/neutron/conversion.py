@@ -1,3 +1,6 @@
+# -*- Python -*-
+# Jiao Lin <linjiao@caltech.edu>
+
 from math import sqrt
 from .constants import *
 
@@ -24,3 +27,6 @@ def v2e(v):
     return v*v*VS2E
 def k2e(k):
     return v2e( k2v( k) )
+
+
+# End of file 
