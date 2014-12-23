@@ -118,14 +118,15 @@ def Eresidual(xtalori, hkl, Etarget, angles, Ei):
     return r
 
 
-def test_Eresidual():    
+def test_Eresidual(examples):    
     Ei = 100
     Etarget = 35
     angles = np.arange(-5, 89.6, 0.5) # psi angles
     angles = np.arange(40, 49.5, 0.5) # psi angles
     
     from nslice.io import load_xtal_ori
-    xtalori = load_xtal_ori("../examples/Si/i.xtal_ori")
+    import os
+    xtalori = load_xtal_ori(os.path.join(examples, "Si/i.xtal_ori"))
     
     # hkl. center of silicon 111 plot
     ex = np.array((1,0,0))
@@ -141,9 +142,14 @@ def test_Eresidual():
     return
 
 
-def main():
+def test(examples):
     test_xtalori2mat()
-    test_Eresidual()
+    test_Eresidual(examples)
+    return
+
+
+def main():
+    test("../examples")
     return
 
 
