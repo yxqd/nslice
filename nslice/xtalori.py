@@ -89,8 +89,61 @@ def test_xtalori2mat():
     return
 
 
+def Eresidual(xtalori, hkl, Etarget, angles, Ei):
+    """compute residual of energy transfer
+    This method compute a series of psi angle and corresponding residual 
+    (E - Etarget).
+    We only need to simulate crystal orientation where the residual 
+    is close to zero.
+    """
+
+    from nslice.neutron import conversion as conv
+    ki = conv.e2k(Ei)
+    kiv = np.array([ki,0,0])
+    
+    r = np.zeros((len(angles), 2))
+    for i, psi in enumerate(angles):
+        xtalori.psi = psi / 180. * np.pi
+        hkl2cartesian = xtalori.hkl2cartesian_mat()
+        # cart2hkl = xtalori.cartesian2hkl_mat()
+        Qcart = np.dot(hkl, hkl2cartesian)
+        # print hkl, np.dot(Qcart, cart2hkl)
+        # print Qcart
+        kfv = kiv - Qcart
+        kf = np.linalg.norm(kfv)
+        Ef = conv.k2e(kf)
+        E = Ei - Ef
+        r[i] = psi, E-Etarget
+        continue
+    return r
+
+
+def test_Eresidual():    
+    Ei = 100
+    Etarget = 35
+    angles = np.arange(-5, 89.6, 0.5) # psi angles
+    angles = np.arange(40, 49.5, 0.5) # psi angles
+    
+    from nslice.io import load_xtal_ori
+    xtalori = load_xtal_ori("../examples/Si/i.xtal_ori")
+    
+    # hkl. center of silicon 111 plot
+    ex = np.array((1,0,0))
+    ey = np.array((0,1,0))
+    ez = np.array((0,0,1))
+    u = ex + 0.5 * ey - 0.5 *ez
+    v = -ey - ez
+    hkl = -(5+1./3) * u + 0 * v
+    
+    print "psi\tresidual"
+    print Eresidual(xtalori, hkl, Etarget, angles, Ei)
+    
+    return
+
+
 def main():
     test_xtalori2mat()
+    test_Eresidual()
     return
 
 
