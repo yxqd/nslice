@@ -1,0 +1,9 @@
+import nslice as ns
+u = ns.hkl(1, 0.5, -0.5)
+v = ns.hkl(0., -1, -1)
+
+# target hkl
+hkl = -(5+1./3) * u + 0 * v
+
+# target energy transfer
+E = 35
