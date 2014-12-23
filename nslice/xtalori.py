@@ -132,8 +132,9 @@ def test_Eresidual(examples):
     ex = np.array((1,0,0))
     ey = np.array((0,1,0))
     ez = np.array((0,0,1))
-    u = ex + 0.5 * ey - 0.5 *ez
-    v = -ey - ez
+    import nslice
+    u = nslice.hkl(1, 0.5, -0.5)
+    v = nslice.hkl(0, -1, -1)
     hkl = -(5+1./3) * u + 0 * v
     
     print "psi\tresidual"
